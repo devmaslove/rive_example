@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 import 'package:wstore/wstore.dart';
 
 class HomePageStore extends WStore {
@@ -51,6 +52,28 @@ class HomePage extends WStoreWidget<HomePageStore> {
         onPressed: store.incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.symmetric(horizontal: 24),
+          decoration: const BoxDecoration(
+            color: Color(0xFF40495E),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          child: Row(
+            children: const [
+              SizedBox(
+                height: 36,
+                width: 36,
+                child: RiveAnimation.asset(
+                  'assets/rive/icons.riv',
+                  artboard: 'LIKE/STAR',
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
