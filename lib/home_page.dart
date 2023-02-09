@@ -122,61 +122,13 @@ class HomePage extends WStoreWidget<HomePageStore> {
                   watch: (store) => button.selected,
                   store: store,
                   builder: (context, selected) {
-                    return GestureDetector(
+                    return BarAnimatedButton(
+                      selected: selected,
+                      artboard: button.artboard,
+                      stateMachineName: button.stateMachineName,
                       onTap: () {
-                        button.input?.change(true);
-                        Future.delayed(
-                          const Duration(
-                            milliseconds: 100,
-                          ),
-                          () => button.input?.change(false),
-                        );
                         store.setSelected(button);
                       },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.all(2),
-                            height: 4,
-                            width: selected ? 20 : 0,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF81B4FF),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 36,
-                            width: 36,
-                            child: Opacity(
-                              opacity: selected ? 1 : 0.5,
-                              child: RiveAnimation.asset(
-                                'assets/rive/icons.riv',
-                                artboard: button.artboard,
-                                stateMachines: [button.stateMachineName],
-                                onInit: (artboard) {
-                                  for (var controller
-                                      in artboard.animationControllers) {
-                                    if (controller is StateMachineController &&
-                                        controller.stateMachine.name ==
-                                            button.stateMachineName) {
-                                      button.input =
-                                          controller.findSMI<SMIBool>('active');
-                                    }
-                                  }
-                                  assert(
-                                    button.input != null,
-                                    'Can\'t find state machine ${button.stateMachineName}',
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     );
                   },
                 ),
@@ -184,6 +136,83 @@ class HomePage extends WStoreWidget<HomePageStore> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BarAnimatedButton extends StatefulWidget {
+  final VoidCallback onTap;
+  final bool selected;
+  final String artboard;
+  final String stateMachineName;
+
+  const BarAnimatedButton({
+    super.key,
+    required this.onTap,
+    required this.selected,
+    required this.artboard,
+    required this.stateMachineName,
+  });
+
+  @override
+  State<BarAnimatedButton> createState() => _BarAnimatedButtonState();
+}
+
+class _BarAnimatedButtonState extends State<BarAnimatedButton> {
+  SMIBool? input;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        input?.change(true);
+        Future.delayed(
+          const Duration(milliseconds: 100),
+          () => input?.change(false),
+        );
+        widget.onTap();
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: const EdgeInsets.all(2),
+            height: 4,
+            width: widget.selected ? 20 : 0,
+            decoration: const BoxDecoration(
+              color: Color(0xFF81B4FF),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+          ),
+          SizedBox(
+            height: 36,
+            width: 36,
+            child: Opacity(
+              opacity: widget.selected ? 1 : 0.5,
+              child: RiveAnimation.asset(
+                'assets/rive/icons.riv',
+                artboard: widget.artboard,
+                stateMachines: [widget.stateMachineName],
+                onInit: (artBoard) {
+                  for (var controller in artBoard.animationControllers) {
+                    if (controller is StateMachineController &&
+                        controller.stateMachine.name ==
+                            widget.stateMachineName) {
+                      input = controller.findSMI<SMIBool>('active');
+                      break;
+                    }
+                  }
+                  assert(
+                    input != null,
+                    'Can\'t find state machine ${widget.stateMachineName}',
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
