@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rive_example/home_page.dart';
+import 'package:rive_example/screens/onboding/onboding_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,12 +10,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const defaultInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      borderSide: BorderSide(
+        color: Color(0xFFDEE3F2),
+        width: 1,
+      ),
+    );
     return MaterialApp(
       title: 'Rive example',
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFEEF1F8),
         primarySwatch: Colors.blue,
+        fontFamily: "Intel",
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          errorStyle: TextStyle(height: 0),
+          border: defaultInputBorder,
+          enabledBorder: defaultInputBorder,
+          focusedBorder: defaultInputBorder,
+          errorBorder: defaultInputBorder,
+        ),
       ),
-      home: const HomePage(),
+      home: const OnbodingScreen(),
     );
   }
 }

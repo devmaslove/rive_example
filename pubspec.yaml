@@ -1,6 +1,6 @@
 name: rive_example
 description: A new Flutter project.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   wstore: ^1.0.1
   rive: ^0.10.1
+  flutter_svg: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -25,3 +26,16 @@ flutter:
 
   assets:
     - assets/rive/
+    - assets/fonts/
+    - assets/images/
+
+  fonts:
+    - family: Intel
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
