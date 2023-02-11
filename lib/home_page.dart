@@ -6,7 +6,6 @@ class RiveButton {
   final String title;
   final String artboard;
   final String stateMachineName;
-  SMIBool? input;
   bool selected;
 
   RiveButton({
