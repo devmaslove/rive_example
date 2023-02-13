@@ -3,10 +3,17 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+import 'package:rive_example/screens/onboding/components/custom_sign_in_dialog.dart';
 import 'package:wstore/wstore.dart';
 
 class OnbodingScreenStore extends WStore {
-  // TODO: add data here...
+  bool isSignInDialogShown = false;
+
+  void setSignInDialogShown(bool show) {
+    setStore(() {
+      isSignInDialogShown = show;
+    });
+  }
 
   @override
   OnbodingScreen get widget => super.widget as OnbodingScreen;
@@ -37,7 +44,10 @@ class OnbodingScreen extends WStoreWidget<OnbodingScreenStore> {
                     Text(
                       'Rive example',
                       style: TextStyle(
-                          fontSize: 60, height: 1.2, fontFamily: 'Poppins'),
+                        fontSize: 60,
+                        height: 1.2,
+                        fontFamily: 'Poppins',
+                      ),
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -48,11 +58,20 @@ class OnbodingScreen extends WStoreWidget<OnbodingScreenStore> {
               ),
               const Spacer(flex: 2),
               AnimationStartButton(
-                onPress: () {},
+                onPress: () {
+                  store.setSignInDialogShown(true);
+                  customSignInDialog(context).then(
+                    (value) {
+                      store.setSignInDialogShown(false);
+                    },
+                  );
+                },
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 24),
-                child: Text('Мотивирующий текст, для того чтобы уж точно нажать на эту кнопку. Жми!'),
+                child: Text(
+                  'Мотивирующий текст, для того чтобы уж точно нажать на эту кнопку. Жми!',
+                ),
               ),
             ],
           ),
@@ -96,8 +115,19 @@ class AnimatedBackground extends StatelessWidget {
             child: const SizedBox(),
           ),
         ),
-        SafeArea(
-          child: child,
+        WStoreValueBuilder<OnbodingScreenStore, bool>(
+          watch: (store) => store.isSignInDialogShown,
+          builder: (context, show) {
+            return AnimatedPositioned(
+              duration: const Duration(milliseconds: 240),
+              top: show ? -50 : 0,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: SafeArea(
+                child: child,
+              ),
+            );
+          },
         ),
       ],
     );
@@ -133,7 +163,12 @@ class _AnimationStartButtonState extends State<AnimationStartButton> {
     return GestureDetector(
       onTap: () {
         _btnAnimationController.isActive = true;
-        widget.onPress();
+        Future.delayed(
+          const Duration(milliseconds: 800),
+          () {
+            widget.onPress();
+          },
+        );
       },
       child: SizedBox(
         height: 64,
